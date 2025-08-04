@@ -41,18 +41,23 @@ struct ContentView: View {
  Struct that holds properties of the card view
  */
 struct CardView: View {
-    var isFaceUp: Bool = false
+    @State var isFaceUp: Bool = false // explicitly defining var type
     var body: some View {
         ZStack {
+            let base = Circle() // let == constant in swift
+            // no need to explicitly define type for variables/constants (type inferencing)
+            
             if isFaceUp {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.white)
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(lineWidth: 2)
+                base.foregroundColor(.white)
+                base.strokeBorder(lineWidth: 2)
                 Text("👻").font(.largeTitle)
             } else {
-                RoundedRectangle(cornerRadius: 12)
+                base.fill()
             }
+        }
+        .onTapGesture { // unable to mutate variables in view, need to change state vars (pointer vars)
+            //print("tapped")
+            isFaceUp.toggle()
         }
     }
 }
