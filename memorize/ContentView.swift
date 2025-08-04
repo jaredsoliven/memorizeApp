@@ -37,6 +37,9 @@ struct ContentView: View {
     }
 }
 
+/**
+ Struct that holds properties of the card view
+ */
 struct CardView: View {
     var isFaceUp: Bool = false
     var body: some View {
