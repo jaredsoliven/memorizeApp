@@ -21,6 +21,13 @@
  view -> (intent) view model -> model
  - (any changes in view model are updated in model)
  - (view model looks for changes in view with intent)
+ 
+ Lec 5
+ - state object in view lives when the view is on screen. is removed when view is no longer used
+ - state object in the app lives while the app is live
+ 
+ - stateobject scope can only be used in the parent view or any views created in the body of a view
+ - preview creates a new view everyime
  */
 
 import SwiftUI
@@ -32,6 +39,7 @@ struct EmojiMemoryGameView: View {
         VStack {
             ScrollView {
                 cards
+                    .animation(.default, value:viewModel.cards)
             }
             Button("Shuffle") {
                 viewModel.shuffle()
@@ -42,10 +50,15 @@ struct EmojiMemoryGameView: View {
     
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
-            ForEach(viewModel.cards.indices, id: \.self) { index in
-                CardView(viewModel.cards[index])
-                    .aspectRatio(2/3, contentMode: .fit)
-                    .padding(4)
+            ForEach(viewModel.cards) { card in
+                VStack(spacing: 0) {
+                    CardView(card)
+                        .aspectRatio(2/3, contentMode: .fit)
+                        .padding(4)
+                        .onTapGesture {
+                            viewModel.choose(card)
+                        }
+                }
             }
         }
         .foregroundColor(.orange)
@@ -78,7 +91,9 @@ struct CardView: View {
             .opacity(card.isFaceUp ? 1 : 0)
             base.fill().opacity(card.isFaceUp ? 0 : 1)
         }
+        .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
     }
+
 }
 
 #Preview {
